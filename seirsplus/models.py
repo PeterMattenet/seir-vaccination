@@ -790,11 +790,11 @@ class SEIRSNetworkModel():
             self.beta_global         = self.beta      
             self.beta_Q_global       = self.beta_Q    
         elif(self.beta_pairwise_mode == 'min'):
-            self.beta_global         = numpy.minimum(self.beta, numpy.mean(beta)) 
-            self.beta_Q_global       = numpy.minimum(self.beta_Q, numpy.mean(beta_Q)) 
+            self.beta_global         = numpy.minimum(self.beta, numpy.mean(self.beta)) 
+            self.beta_Q_global       = numpy.minimum(self.beta_Q, numpy.mean(self.beta_Q)) 
         elif(self.beta_pairwise_mode == 'max'):
-            self.beta_global         = numpy.maximum(self.beta, numpy.mean(beta)) 
-            self.beta_Q_global       = numpy.maximum(self.beta_Q, numpy.mean(beta_Q)) 
+            self.beta_global         = numpy.maximum(self.beta, numpy.mean(self.beta)) 
+            self.beta_Q_global       = numpy.maximum(self.beta_Q, numpy.mean(self.beta_Q)) 
         elif(self.beta_pairwise_mode == 'mean'):
             self.beta_global         = (self.beta + numpy.full_like(self.beta, fill_value=numpy.mean(self.beta)))/2
             self.beta_Q_global       = (self.beta_Q + numpy.full_like(self.beta_Q, fill_value=numpy.mean(self.beta_Q)))/2
@@ -1093,19 +1093,19 @@ class SEIRSNetworkModel():
         if(isolate == True):
             if(self.X[node] == self.E):
                 self.X[node] = self.Q_E
-                self.timer_state = 0
+                self.timer_state[node] = 0.0
             elif(self.X[node] == self.I):
                 self.X[node] = self.Q_I
-                self.timer_state = 0
+                self.timer_state[node] = 0.0
         elif(isolate == False):
             if(self.X[node] == self.Q_E):
                 self.X[node] = self.E
-                self.timer_state = 0
+                self.timer_state[node] = 0.0
             elif(self.X[node] == self.Q_I):
                 self.X[node] = self.I
-                self.timer_state = 0
+                self.timer_state[node] = 0.0
         # Reset the isolation timer:
-        self.timer_isolation[node] = 0
+        self.timer_isolation[node] = 0.0
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1837,6 +1837,8 @@ class ExtSEIRSNetworkModel():
         self.Q_sym      = 14
         self.Q_asym     = 15
         self.Q_R        = 17
+        self.Q_I_sym    = 18
+        self.Q_I_asym       = 19
         
         self.X = numpy.array( [self.S]*int(self.numS[0]) + [self.E]*int(self.numE[0]) 
                                + [self.I_pre]*int(self.numI_pre[0]) + [self.I_sym]*int(self.numI_sym[0]) + [self.I_asym]*int(self.numI_asym[0]) 
@@ -2044,13 +2046,13 @@ class ExtSEIRSNetworkModel():
             self.beta_Q_global       = self.beta_Q    
             self.beta_asym_global    = self.beta_asym
         elif(self.beta_pairwise_mode == 'min'):
-            self.beta_global         = numpy.minimum(self.beta, numpy.mean(beta)) 
-            self.beta_Q_global       = numpy.minimum(self.beta_Q, numpy.mean(beta_Q)) 
-            self.beta_asym_global    = numpy.minimum(self.beta_asym, numpy.mean(beta_asym))
+            self.beta_global         = numpy.minimum(self.beta, numpy.mean(self.beta)) 
+            self.beta_Q_global       = numpy.minimum(self.beta_Q, numpy.mean(self.beta_Q)) 
+            self.beta_asym_global    = numpy.minimum(self.beta_asym, numpy.mean(self.beta_asym))
         elif(self.beta_pairwise_mode == 'max'):
-            self.beta_global         = numpy.maximum(self.beta, numpy.mean(beta)) 
-            self.beta_Q_global       = numpy.maximum(self.beta_Q, numpy.mean(beta_Q)) 
-            self.beta_asym_global    = numpy.maximum(self.beta_asym, numpy.mean(beta_asym))
+            self.beta_global         = numpy.maximum(self.beta, numpy.mean(self.beta)) 
+            self.beta_Q_global       = numpy.maximum(self.beta_Q, numpy.mean(self.beta_Q)) 
+            self.beta_asym_global    = numpy.maximum(self.beta_asym, numpy.mean(self.beta_asym))
         elif(self.beta_pairwise_mode == 'mean'):
             self.beta_global         = (self.beta + numpy.full_like(self.beta, fill_value=numpy.mean(self.beta)))/2
             self.beta_Q_global       = (self.beta_Q + numpy.full_like(self.beta_Q, fill_value=numpy.mean(self.beta_Q)))/2
@@ -2468,7 +2470,7 @@ class ExtSEIRSNetworkModel():
             elif(self.X[node] == self.Q_R):
                 self.X[node] = self.R
         # Reset the isolation timer:
-        self.timer_isolation[node] = 0
+        self.timer_isolation[node] = 0.0
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -144,6 +144,16 @@ def generate_demographic_contact_network(N, demographic_data, layer_generator='F
     age_distn_givenNOTO60 = {bracket: pct/totalPctNOTO60 for bracket, pct in age_distn.items() if bracket in ageBrackets_NOTO60}
 
 
+    # Nuevas Variables:
+    ageBrackets_20to40           = ['20-24', '25-29', '30-34', '35-39']
+    totalPct20to40               = numpy.sum([age_distn[bracket] for bracket in ageBrackets_20to40])
+    age_distn_given20to40 = {bracket: pct/totalPct20to40 for bracket, pct in age_distn.items() if bracket in ageBrackets_20to40}
+
+    ageBrackets_40to60           = ['40-44', '45-49', '50-54', '55-59']
+    totalPct40to60               = numpy.sum([age_distn[bracket] for bracket in ageBrackets_40to60])
+    age_distn_given40to60 = {bracket: pct/totalPct40to60 for bracket, pct in age_distn.items() if bracket in ageBrackets_40to60}
+
+
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # Calculate the probabilities of a household having members in the major age groups, 
     # conditional on single/multi-occupancy:
@@ -375,14 +385,11 @@ def generate_demographic_contact_network(N, demographic_data, layer_generator='F
     if(layer_info is None):
         # Use the following default data if none is provided:
         # Data source: https://www.medrxiv.org/content/10.1101/2020.03.19.20039107v1
-        layer_info  = { '0-9':   {'ageBrackets': ['0-9'],                   'meanDegree': 8.6, 'meanDegree_CI': (0.0, 17.7) },
-                        '10-19': {'ageBrackets': ['10-19'],                 'meanDegree': 16.2, 'meanDegree_CI': (12.5, 19.8) },
-                        '20-59': {'ageBrackets': ['20-29', '30-39', '40-49', '50-59'], 
-                                                    'meanDegree': ((age_distn_given20to60['20-29']+age_distn_given20to60['30-39'])*15.3 + (age_distn_given20to60['40-49']+age_distn_given20to60['50-59'])*13.8), 
-                                                    'meanDegree_CI': ( ((age_distn_given20to60['20-29']+age_distn_given20to60['30-39'])*12.6 + (age_distn_given20to60['40-49']+age_distn_given20to60['50-59'])*11.0), ((age_distn_given20to60['20-29']+age_distn_given20to60['30-39'])*17.9 + (age_distn_given20to60['40-49']+age_distn_given20to60['50-59'])*16.6) ) },
-                        # '20-39': {'ageBrackets': ['20-29', '30-39'],        'meanDegree': 15.3, 'meanDegree_CI': (12.6, 17.9) },
-                        # '40-59': {'ageBrackets': ['40-49', '50-59'],        'meanDegree': 13.8, 'meanDegree_CI': (11.0, 16.6) },
-                        '60+':   {'ageBrackets': ['60-69', '70-79', '80+'], 'meanDegree': 13.9, 'meanDegree_CI': (7.3, 20.5) } }
+        layer_info  = { '0-9':   {'ageBrackets': ['0-4', '5-9'],                   'meanDegree': 8.6, 'meanDegree_CI': (0.0, 17.7) },
+                        '10-19': {'ageBrackets': ['10-14', '15-19'],                 'meanDegree': 16.2, 'meanDegree_CI': (12.5, 19.8) },
+                        '20-39': {'ageBrackets': ['20-24', '25-29', '30-34', '35-39'],        'meanDegree': 15.3, 'meanDegree_CI': (12.6, 17.9) },
+                        '40-59': {'ageBrackets': ['40-44', '45-49', '50-54', '55-59'],        'meanDegree': 13.8, 'meanDegree_CI': (11.0, 16.6) },
+                        '60+':   {'ageBrackets': ['60-64', '65-69', '70-74', '75-79', '80-84', '80+'], 'meanDegree': 13.9, 'meanDegree_CI': (7.3, 20.5) } }
 
     # Count the number of individuals in each age bracket in the generated households:
     ### Pedro: conta por la cantidad de individuos por bracket de edad en la totalidad de la red
@@ -645,49 +652,37 @@ def generate_demographic_contact_network(N, demographic_data, layer_generator='F
 
 
 def household_country_data(country):
-
-    if(country=='US'):
-        household_data = {
-                            'household_size_distn':{ 1: 0.283708848, 
-                                                    2: 0.345103011, 
-                                                    3: 0.150677793,
-                                                    4: 0.127649150, 
-                                                    5: 0.057777709, 
-                                                    6: 0.022624223, 
-                                                    7: 0.012459266  },
-
-                            'age_distn':{'0-9':   0.121,
-                                                '10-19': 0.131,
-                                                '20-29': 0.137,
-                                                '30-39': 0.133,
-                                                '40-49': 0.124,
-                                                '50-59': 0.131,
-                                                '60-69': 0.115,
-                                                '70-79': 0.070,
-                                                '80+'  : 0.038  },
-
-                            'household_stats':{ 'pct_with_under20':          0.3368, 
-                                                'pct_with_over60':           0.3801,
-                                                'pct_with_under20_over60':  0.0341,
-                                                'pct_with_over60_givenSingleOccupant':       0.110,
-                                                'mean_num_under20_givenAtLeastOneUnder20':  1.91 }
-                        }
     if(country=='ARG'):
         household_data = {
             # Uso de distribuicion Poisson para estimar los grupos familiares de 5 para arriba, usando una distribucion Poisson(1.765) para reflejar cuantos familiares adicionales a 5 hay
-            # Esto es una
-            'household_size_distn':{ 1: 0.365, 
-                                        2: 0.258, 
-                                        3: 0.158,
-                                        4: 0.139, 
-                                        5: 0.02948192762642533,
-                                        6: 0.00867260037677345,
-                                        7: 0.002186734237857877, 
-                                        8: 0.00048244824122739403, 
-                                        9: 9.461346064070563e-05, 
-                                        10: 1.669927580308454e-05,
+            # Esto es una aporximacion https://www.researchgate.net/publication/226081704_Household_size_and_the_Poisson_distribution
+            # Datos obtenidos de 1 a 5+ https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2018/01/ir_2017_1223.pdf
+            # 'household_size_distn':{ 1: 0.365, 
+            #                             2: 0.258, 
+            #                             3: 0.158,
+            #                             4: 0.139, 
+            #                             5: 0.02948192762642533,
+            #                             6: 0.00867260037677345,
+            #                             7: 0.002186734237857877, 
+            #                             8: 0.00048244824122739403, 
+            #                             9: 9.461346064070563e-05, 
+            #                             10: 1.669927580308454e-05,
+            #                         },
+
+            # Datos obtenidos de: https://www.buenosaires.gob.ar/sites/gcaba/files/nro_5_informe_sobre_situacion_habitacional_de_inquilinos_en_la_ciudad_de_buenos_aires.pdf
+            'household_size_distn':{ 1: 0.393, 
+                                        2: 0.235, 
+                                        3: 0.172,
+                                        4: 0.129, 
+                                        5: 0.048,
+                                        6: 0.012,
+                                        7: 0.007, 
+                                        8: 0.002, 
+                                        9: 0.001, 
+                                        10: 0.001
                                     },
 
+            # Datos obtenidos de https://www.estadisticaciudad.gob.ar/eyc/?p=116424
             'age_distn':{'0-4':   0.057311,
                             '5-9': 0.054105,
                             '10-14': 0.052074,
@@ -708,35 +703,11 @@ def household_country_data(country):
                             '85-89': 0.016123,
                             '90+': 0.007791 },
 
-            # el Primero podria calculandolo viendo la cantidad de menores de 20 que hay censado, el promedio de jovenes por casa y asi estimar cuantas casas tienen jovenes del total
-            # este podria calcularlo con la cantidad de hogares donde vive un anciano solo, un anciano con su pareja, y despues asumir que el resto habitan 1 por vivienda y no es compartida (hmm no se)
-            # hmm ni idea (censo hogares compartidos por familia entera extendida)
-            # ya esta calculado, contamos los ancianos y con el porcentaje de uno de los censos sabemos cuantas viviendas estan ocupadas por uno solo, eso habria que dividirlo por cuantas casas son de un unico habitante
-            # tenemos el promedio de jovenes entre 15-29
-            #    https://www.estadisticaciudad.gob.ar/eyc/publicaciones/situacion_jovenes_caba_2019/#:~:text=En%20un%20tercio%20(32%2C3,6%25%20est%C3%A1%20encabezado%20por%20j%C3%B3venes.&text=El%2015%2C5%25%20de%20los%20j%C3%B3venes%20viven%20solos.
-            #
             'household_stats':{ 'pct_with_under20':          0.3368, 
-                                'pct_with_over60':           0.3801,
-                                'pct_with_under20_over60':  0.0341,
-                                'pct_with_under25_givenSingleOccupant':  0.36801,
-                                'pct_with_over65_givenSingleOccupant':  0.36801,
-                                'mean_num_under20_givenAtLeastOneUnder20':  1.91,
-                                'pct_with_over15_under30':  0.2 }
-
-            # OK, nueva propuesta. Primero elegir al azar que tipo de jefe va a manejar la casa. Luego determinar cuantos habitantes van a ocuparla 
-            #   En el caso de jefe de 65 ya calculamos las chances de que viva solo, o en pareja (2), o resto de familia extendida + otros
-            #       https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2017/05/DP60SC.xlsx
-            #   En el caso de jovenes, habria que ver
-            #   https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2015/04/ir_2012_492.pdf pero es del 2010, nos permite para toda edad saber las chances de que viva solo
-            #   El resto de las franjas podriamos tratar las probabilidades de household tal como estan planteadas
-            # Una vez definido el numero de habitantes, calculamos la probabilidad por caso de jefe de que un nuevo habitante sea de que franja etaria
-            #   Para esto poddriamos simplemente tratarlo como una variable aleatoria donde las chances de X edad es igual a #GenteDeEsaEdadQueHabitaConJefeY / #GEnteQueHabitaConJefeY 
-            #   Recordar no contar a la gente que YA es jefe
-            #   Alternativa, usar la media y, con eso definir una poisson por cada edad? Iterar hasta que se llene el cupo de la casa? No tiene mucho sentido
-            #   Si se da que el jefe es mayor de 24, y hay un crio, podemos agregar los hermanos a partir de una Poisson con promedio 1.54
-            #       https://www.estadisticaciudad.gob.ar/eyc/wp-content/uploads/2019/01/ir_2019_1334.pdf
-            # Una vez tomada esta nueva persona, usar las probabilidades demografias para restringir a que edad pertenece, adentro de su sub grupo
-
+                            'pct_with_over60':           0.3801,
+                            'pct_with_under20_over60':  0.0341,
+                            'pct_with_over60_givenSingleOccupant':       0.110,
+                            'mean_num_under20_givenAtLeastOneUnder20':  1.91 }
 
         }
     return household_data

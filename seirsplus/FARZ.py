@@ -98,13 +98,13 @@ class Graph:
         return 
     
      
-    def to_nx(self):
-        import networkx as nx
-        G=nx.Graph()
-        for u,v, w in self.edge_list:
-            G.add_edge(u, v)
-            # G.add_edges_from(self.edge_list)
-        return G
+    # def to_nx(self):
+    #     import networkx as nx
+    #     G=nx.Graph()
+    #     for u,v, w in self.edge_list:
+    #         G.add_edge(u, v)
+    #         # G.add_edges_from(self.edge_list)
+    #     return G
     
     def to_nx(self, C):
         import networkx as nx
@@ -122,10 +122,10 @@ class Graph:
             # G.add_edges_from(self.edge_list)
         return G
     
-    def to_ig(self):
-        G=ig.Graph()
-        G.add_edges(self.edge_list)
-        return G 
+    # def to_ig(self):
+    #     G=ig.Graph()
+    #     G.add_edges(self.edge_list)
+    #     return G 
  
  
     def write_edgelist(self, path):
@@ -268,6 +268,7 @@ def realize(n, m,  k, b=0.0,  alpha=0.4, beta=0.5, gamma=0.1, phi=1, r=1, q = 0.
 def props():
     import plotNets as pltn
     import matplotlib as mpl
+    import networkx as nx
     mpl.rcParams['axes.unicode_minus']=False
     graphs = []
     names = []
@@ -426,7 +427,7 @@ def main(argv):
             try:
                 arange = [float(s) for s in arg[1:-1].split(',')]
                 batch_setting['arange'] = arange
-            except Error:
+            except ValueError:
                 print('Invalid range, should have the following form : [start,end,incrementBy], try -h to see the usage and options ')
                 sys.exit(2)               
         elif opt in ("-n"):
