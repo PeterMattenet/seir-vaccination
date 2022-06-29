@@ -1,3 +1,5 @@
+Forked version of https://github.com/ryansmcgee/seirsplus
+
 # SEIRS+ Model Framework
 
 This package implements models of generalized SEIRS infectious disease dynamics with extensions that allow us to study the effect of social contact network structures, heterogeneities, stochasticity, and interventions, such as social distancing, testing, contact tracing, and isolation. 
