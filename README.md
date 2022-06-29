@@ -1,4 +1,3 @@
-Forked version of https://github.com/ryansmcgee/seirsplus
 
 # SEIRS+ Model Framework
 
